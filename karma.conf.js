@@ -7,6 +7,7 @@ module.exports = function (config) {
     basePath: '',
     frameworks: ['jasmine'],
     plugins: [
+      require('karma-phantomjs-launcher'),
       require('karma-jasmine'),
       require('karma-chrome-launcher'),
       require('karma-coverage'),

@@ -10,7 +10,7 @@
     "typings": "typings",
     "testhtmloutput": "live-server --open=unit-tests.html",
     "testjasmine": "concurrent \"npm run tsc:w\" \"npm run testhtmloutput\" ",
-    "test": "tsc && karma start karma.conf.js && npm run remap-istanbul && npm run show-coverage",
+    "test": "gulp clean && tsc && karma start karma.conf.js && npm run remap-istanbul && npm run show-coverage",
     "remap-istanbul": "remap-istanbul -i ./coverage/coverage-final.json -o ./report/coverage/html-report -t html",
     "show-coverage": "live-server --open=./report/coverage/html-report/index.html"
   },
