@@ -82,7 +82,11 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: false,
-    browsers: ['Chrome'],
+    browsers: ['PhantomJS'],
+    captureTimeout: 60000,
+    browserDisconnectTimeout: 2000,
+    browserNoActivityTimeout: 10000,
+    browserDisconnectTolerance: 10,
     singleRun: true
   })
 }
