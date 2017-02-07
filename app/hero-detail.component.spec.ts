@@ -7,18 +7,18 @@ import {
     beforeEachProviders
 } from '@angular/core/testing';
 import { TestComponentBuilder } from '@angular/compiler/testing';
-import {provide, ApplicationRef} from '@angular/core';
-import {Router, ROUTER_PRIMARY_COMPONENT, ROUTER_PROVIDERS, RouteParams} from '@angular/router-deprecated';
-import {APP_BASE_HREF, Location} from '@angular/common';
-import {MockApplicationRef} from '@angular/core/testing';
-import {SpyLocation} from '@angular/common/testing/location_mock';
-import {HTTP_PROVIDERS} from '@angular/http';
+import { provide, ApplicationRef } from '@angular/core';
+import { Router, ROUTER_PRIMARY_COMPONENT, ROUTER_PROVIDERS, RouteParams } from '@angular/router-deprecated';
+import { APP_BASE_HREF, Location } from '@angular/common';
+import { MockApplicationRef } from '@angular/core/testing';
+import { SpyLocation } from '@angular/common/testing/location_mock';
+import { HTTP_PROVIDERS } from '@angular/http';
 
-import {HeroDetailComponent} from './hero-detail.component';
-import {HeroService} from './hero.service';
-import {MockHeroService} from './Testing/mocks';
+import { HeroDetailComponent } from './hero-detail.component';
+import { HeroService } from './hero.service';
+import { MockHeroService } from './Testing/mocks';
 
-describe('Dashboard Component', () => {
+describe('HeroDetail Component', () => {
     let service;
     let testingComponent: HeroDetailComponent;
     let router: Router;
@@ -32,7 +32,7 @@ describe('Dashboard Component', () => {
         provide(ROUTER_PRIMARY_COMPONENT, { useValue: HeroDetailComponent }),
         provide(ApplicationRef, { useClass: MockApplicationRef }),
         provide(Router, { useValue: jasmine.createSpyObj('Router', ['navigate']) }),
-        provide(HeroService, {useClass: MockHeroService}),
+        provide(HeroService, { useClass: MockHeroService }),
         provide(RouteParams, { useValue: new RouteParams({ id: '12' }) }),
         MockHeroService,
         HeroDetailComponent,
@@ -53,7 +53,7 @@ describe('Dashboard Component', () => {
         tcb.overrideProviders(HeroDetailComponent,
             [
                 provide(RouteParams, { useValue: new RouteParams({ id: '12' }) }),
-                provide(HeroService, {useClass: MockHeroService})
+                provide(HeroService, { useClass: MockHeroService })
             ])
             .createAsync(HeroDetailComponent).then(fixture => {
                 fixture.detectChanges();
@@ -77,7 +77,7 @@ describe('Dashboard Component', () => {
                 fixture.detectChanges();
 
                 setTimeout(initTest);
-        })
+            })
             .catch(e => done.fail(e));
     });
 
@@ -85,7 +85,7 @@ describe('Dashboard Component', () => {
         tcb.overrideProviders(HeroDetailComponent,
             [
                 provide(RouteParams, { useValue: new RouteParams({ id: '12' }) }),
-                provide(HeroService, {useClass: MockHeroService})
+                provide(HeroService, { useClass: MockHeroService })
             ])
             .createAsync(HeroDetailComponent).then(fixture => {
                 spyOn(window.history, 'back').and.callFake(function () {
@@ -107,7 +107,7 @@ describe('Dashboard Component', () => {
                 backButton.click();
 
                 setTimeout(test);
-        })
+            })
             .catch(e => done.fail(e));
     });
 });
