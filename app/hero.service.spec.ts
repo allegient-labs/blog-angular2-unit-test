@@ -48,15 +48,15 @@ describe('HeroService Service', () => {
             (connection: MockConnection) => {
                 connection.mockRespond(new Response(
                     new ResponseOptions({
-                        body: { id: 123 }
+                        body: [{ id: 123 }, { id: 234 }]
                     }
                     )));
             });
 
-        // service.getHero(123).subscribe((item: Hero) => {
-        //     expect(item).toBeDefined();
-        //     expect(item.id).toBe(123);
-        // });
+        service.getHero(123).subscribe((item: Hero) => {
+            expect(item).toBeDefined();
+            expect(item.id).toBe(123);
+        });
     }));
 
     it('Should cause error handled in Hero service', inject([XHRBackend, HeroService], (mockBackend, service) => {
