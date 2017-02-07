@@ -48,51 +48,59 @@ describe('Dashboard Component', () => {
         })
     );
 
-    // it('Should get first 4 Heroes on init', done => {
-    //     tcb.createAsync(DashboardComponent).then(fixture => {
-    //         fixture.detectChanges();
-    //         let nativeElement = fixture.nativeElement;
-    //         let component = fixture.componentInstance;
+    it('Should get first 4 Heroes on init', done => {
+        tcb.overrideProviders(DashboardComponent,
+            [
+                provide(HeroService, {useClass: MockHeroService})
+            ])
+            .createAsync(DashboardComponent).then(fixture => {
+                fixture.detectChanges();
+                let nativeElement = fixture.nativeElement;
+                let component = fixture.componentInstance;
 
-    //         let initTest = () => {
-    //             expect(component.heroes).toBeDefined();
-    //             expect(component.heroes.length).toBe(4);
-    //             fixture.detectChanges();
-    //             let heroes = nativeElement.querySelectorAll('div.module h4');
-    //             expect(heroes).toBeDefined();
-    //             expect(heroes.length).toBe(4);
-    //             done();
-    //         };
+                let initTest = () => {
+                    expect(component.heroes).toBeDefined();
+                    expect(component.heroes.length).toBe(4);
+                    fixture.detectChanges();
+                    let heroes = nativeElement.querySelectorAll('div.module h4');
+                    expect(heroes).toBeDefined();
+                    expect(heroes.length).toBe(4);
+                    done();
+                };
 
-    //         component.ngOnInit();
-    //         fixture.detectChanges();
+                component.ngOnInit();
+                fixture.detectChanges();
 
-    //         setTimeout(initTest);
-    //     })
-    //         .catch(e => done.fail(e));
-    // });
+                setTimeout(initTest);
+        })
+            .catch(e => done.fail(e));
+    });
 
-    // it('Clicking hero should navigate to Hero Details', done => {
-    //     tcb.createAsync(DashboardComponent).then(fixture => {
-    //         fixture.detectChanges();
-    //         let nativeElement = fixture.nativeElement;
-    //         let component = fixture.componentInstance;
+    it('Clicking hero should navigate to Hero Details', done => {
+        tcb.overrideProviders(DashboardComponent,
+            [
+                provide(HeroService, {useClass: MockHeroService})
+            ])
+            .createAsync(DashboardComponent).then(fixture => {
+                fixture.detectChanges();
+                let nativeElement = fixture.nativeElement;
+                let component = fixture.componentInstance;
 
-    //         let test = () => {
-    //             expect(component.heroes).toBeDefined();
-    //             expect(component.heroes.length).toBe(4);
-    //             fixture.detectChanges();
-    //             let heroes = nativeElement.querySelectorAll('div.module h4');
-    //             heroes[0].click();
-    //             expect(router.navigate).toHaveBeenCalledWith([ 'HeroDetail', Object({ id: 12 }) ]);
-    //             done();
-    //         };
+                let test = () => {
+                    expect(component.heroes).toBeDefined();
+                    expect(component.heroes.length).toBe(4);
+                    fixture.detectChanges();
+                    let heroes = nativeElement.querySelectorAll('div.module h4');
+                    heroes[0].click();
+                    expect(router.navigate).toHaveBeenCalledWith([ 'HeroDetail', Object({ id: 12 }) ]);
+                    done();
+                };
 
-    //         component.ngOnInit();
-    //         fixture.detectChanges();
+                component.ngOnInit();
+                fixture.detectChanges();
 
-    //         setTimeout(test);
-    //     })
-    //         .catch(e => done.fail(e));
-    // });
+                setTimeout(test);
+        })
+            .catch(e => done.fail(e));
+    });
 });
