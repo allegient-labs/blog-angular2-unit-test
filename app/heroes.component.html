@@ -7,8 +7,8 @@
   </li>
 </ul>
 <div *ngIf="selectedHero">
-  <h2>
+  <h2 name="selectedHeroText">
     {{selectedHero.name | uppercase}} is my hero
   </h2>
-  <button (click)="gotoDetail()">View Details</button>
+  <button name="viewDetails" (click)="gotoDetail()">View Details</button>
 </div>
