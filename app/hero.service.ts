@@ -4,6 +4,7 @@ import { HEROES } from './mock-heroes';
 import { Http, RequestOptions} from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
+import 'rxjs/add/observable/of';
 
 @Injectable()
 export class HeroService extends BaseService {
@@ -11,16 +12,18 @@ export class HeroService extends BaseService {
         super(http);
     }
     getHeroes() {
-        // return Promise.resolve(HEROES);
         let headers = this.getHeaders();
         let options = new RequestOptions({ headers: headers });
-        return this.http.get('./mock-heroes.json', options)
-        .map(this.extractData)
-        .catch(this.handleError);
+        return this.http.get('./app/mock-heroes.json', options)
+            .map(this.extractData)
+            .catch(this.handleError);
     }
     getHero(id: number): Observable<any> {
-        return Observable.of<any>(Promise.resolve(HEROES).then(
-            heroes => heroes.filter(hero => hero.id === id)[0]
-        )).catch(this.handleError);
+        let headers = this.getHeaders();
+        let options = new RequestOptions({ headers: headers });
+        return this.http.get('./app/mock-heroes.json', options)
+            .map(this.extractData)
+            .map(data => data.filter(d => d.id === id)[0])
+            .catch(this.handleError);
     }
 }
