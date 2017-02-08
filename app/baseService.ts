@@ -1,5 +1,6 @@
 import { Http, Headers, RequestOptions, Response, RequestOptionsArgs} from '@angular/http';
 import { Observable }     from 'rxjs/Observable';
+import 'rxjs/add/observable/throw';
 
 export class BaseService {
     constructor(protected http: Http) { }
@@ -7,6 +8,9 @@ export class BaseService {
         let body;
         if (res.text()) {
             body = res.json();
+            if (body.data) {
+                body = body.data;
+            }
         }
         return body || {};
     }
