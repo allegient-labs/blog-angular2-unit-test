@@ -10,14 +10,10 @@ import { MockHeroService } from './Testing/mocks';
 import { MockActivatedRoute } from './Testing/mockActivatedRoute';
 
 describe('HeroDetail Component', () => {
-    let router;
     let mockActivatedRoute;
     let mockLocation;
 
     beforeEach(() => {
-        router = {
-            navigate: jasmine.createSpy('navigate')
-        };
         mockActivatedRoute = new MockActivatedRoute({ 'id': 12 });
         mockLocation = jasmine.createSpyObj('Location', ['back']);
 
