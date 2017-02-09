@@ -54,11 +54,29 @@ describe('HeroDetail Component', () => {
         });
     }));
 
+    it('Clicking save should update Hero and go back', async(() => {
+        TestBed.compileComponents().then(() => {
+            const fixture = TestBed.createComponent(HeroDetailComponent);
+            fixture.detectChanges();
+            let nativeElement = fixture.nativeElement;
+            let component = fixture.componentInstance;
+
+            let test = () => {
+                fixture.detectChanges();
+                expect(mockLocation.back).toHaveBeenCalled();
+            };
+
+            component.ngOnInit();
+            fixture.detectChanges();
+            let saveButton = nativeElement.querySelector('#save');
+            saveButton.click();
+
+            setTimeout(test);
+        });
+    }));
+
     it('Clicking back button should go back', async(() => {
         TestBed.compileComponents().then(() => {
-            spyOn(window.history, 'back').and.callFake(function () {
-                return true;
-            });
             const fixture = TestBed.createComponent(HeroDetailComponent);
             fixture.detectChanges();
             let nativeElement = fixture.nativeElement;
