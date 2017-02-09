@@ -1,5 +1,6 @@
 import { Observable } from 'rxjs/Rx';
 import { HeroService } from '../hero.service';
+import { HeroSearchService } from '../hero-search.service';
 import { Hero } from '../hero';
 import { HEROES } from '../mock-heroes';
 
@@ -44,5 +45,27 @@ export class MockHeroServiceError extends HeroService {
     }
     update(hero: Hero): Promise<Hero> {
         throw new Error('TEST ERROR');
+    }
+}
+
+export class MockHeroSearchService extends HeroSearchService {
+    constructor() {
+        super(null);
+    }
+
+    search(term: string): Observable<Hero[]> {
+        console.log('Using MockHeroSearchService');
+        let heroes = new Array<Hero>();
+        heroes.push(new Hero(1, 'Test' + term));
+        return Observable.of(heroes);
+    }
+}
+
+export class MockHeroSearchServiceError extends HeroSearchService {
+    constructor() {
+        super(null);
+    }
+    search(term: string): Observable<Hero[]> {
+        return Observable.throw(new Error('TEST ERROR'));
     }
 }
