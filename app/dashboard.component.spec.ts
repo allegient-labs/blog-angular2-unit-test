@@ -1,106 +1,75 @@
-// import {
-//     it,
-//     describe,
-//     expect,
-//     inject,
-//     beforeEach,
-//     beforeEachProviders
-// } from '@angular/core/testing';
-// import { TestComponentBuilder } from '@angular/compiler/testing';
-// import {provide, ApplicationRef} from '@angular/core';
-// import {Router, ROUTER_PRIMARY_COMPONENT, ROUTER_PROVIDERS} from '@angular/router-deprecated';
-// import {APP_BASE_HREF, Location} from '@angular/common';
-// import {MockApplicationRef} from '@angular/core/testing';
-// import {SpyLocation} from '@angular/common/testing/location_mock';
-// import {HTTP_PROVIDERS} from '@angular/http';
+import { ComponentFixture, TestBed, tick, fakeAsync, async, inject } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { DebugElement } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { HttpModule } from '@angular/http';
 
-// import {DashboardComponent} from './dashboard.component';
-// import {HeroService} from './hero.service';
-// import {MockHeroService} from './Testing/mocks';
+import {DashboardComponent} from './dashboard.component';
+import {HeroSearchComponent} from './hero-search.component';
+import {HeroService} from './hero.service';
+import {MockHeroService} from './Testing/mocks';
 
-// describe('Dashboard Component', () => {
-//     let service;
-//     let testingComponent: DashboardComponent;
-//     let router: Router;
-//     let tcb;
+describe('Dashboard Component', () => {
+    let router;
 
-//     beforeEachProviders(() => [
-//         HTTP_PROVIDERS,
-//         ROUTER_PROVIDERS,
-//         provide(Location, { useClass: SpyLocation }),
-//         provide(APP_BASE_HREF, { useValue: '/' }),
-//         provide(ROUTER_PRIMARY_COMPONENT, { useValue: DashboardComponent }),
-//         provide(ApplicationRef, { useClass: MockApplicationRef }),
-//         provide(Router, { useValue: jasmine.createSpyObj('Router', ['navigate']) }),
-//         provide(HeroService, {useClass: MockHeroService}),
-//         MockHeroService,
-//         DashboardComponent,
-//         TestComponentBuilder,
-//         HeroService
-//     ]);
+    beforeEach(() => {
+        router = {
+            navigate: jasmine.createSpy('navigate')
+        };
 
-//     beforeEach(inject([DashboardComponent, Router, MockHeroService, TestComponentBuilder],
-//         (c, r, s, _tcb) => {
-//             testingComponent = c;
-//             service = s;
-//             router = r;
-//             tcb = _tcb;
-//         })
-//     );
+        TestBed.configureTestingModule({
+            declarations: [DashboardComponent, HeroSearchComponent], // declare the test component
+            imports: [FormsModule, HttpModule],
+            providers: [
+                { provide: HeroService, useClass: MockHeroService },
+                { provide: Router, useValue: router }
+        ]});
+    });
 
-//     it('Should get first 4 Heroes on init', done => {
-//         tcb.overrideProviders(DashboardComponent,
-//             [
-//                 provide(HeroService, {useClass: MockHeroService})
-//             ])
-//             .createAsync(DashboardComponent).then(fixture => {
-//                 fixture.detectChanges();
-//                 let nativeElement = fixture.nativeElement;
-//                 let component = fixture.componentInstance;
+    it('Should get first 4 Heroes on init', async(() => {
+        TestBed.compileComponents().then(() => {
+            const fixture = TestBed.createComponent(DashboardComponent);
+            fixture.detectChanges();
+            let nativeElement = fixture.nativeElement;
+            let component = fixture.componentInstance;
 
-//                 let initTest = () => {
-//                     expect(component.heroes).toBeDefined();
-//                     expect(component.heroes.length).toBe(4);
-//                     fixture.detectChanges();
-//                     let heroes = nativeElement.querySelectorAll('div.module h4');
-//                     expect(heroes).toBeDefined();
-//                     expect(heroes.length).toBe(4);
-//                     done();
-//                 };
+            let initTest = () => {
+                expect(component.heroes).toBeDefined();
+                expect(component.heroes.length).toBe(4);
+                fixture.detectChanges();
+                let heroes = nativeElement.querySelectorAll('div.module h4');
+                expect(heroes).toBeDefined();
+                expect(heroes.length).toBe(4);
+            };
 
-//                 component.ngOnInit();
-//                 fixture.detectChanges();
+            component.ngOnInit();
+            fixture.detectChanges();
 
-//                 setTimeout(initTest);
-//         })
-//             .catch(e => done.fail(e));
-//     });
+            setTimeout(initTest);
+        });
+    }));
 
-//     it('Clicking hero should navigate to Hero Details', done => {
-//         tcb.overrideProviders(DashboardComponent,
-//             [
-//                 provide(HeroService, {useClass: MockHeroService})
-//             ])
-//             .createAsync(DashboardComponent).then(fixture => {
-//                 fixture.detectChanges();
-//                 let nativeElement = fixture.nativeElement;
-//                 let component = fixture.componentInstance;
+    it('Clicking hero should navigate to Hero Details', async(() => {
+        TestBed.compileComponents().then(() => {
+            const fixture = TestBed.createComponent(DashboardComponent);
+            fixture.detectChanges();
+            let nativeElement = fixture.nativeElement;
+            let component = fixture.componentInstance;
 
-//                 let test = () => {
-//                     expect(component.heroes).toBeDefined();
-//                     expect(component.heroes.length).toBe(4);
-//                     fixture.detectChanges();
-//                     let heroes = nativeElement.querySelectorAll('div.module h4');
-//                     heroes[0].click();
-//                     expect(router.navigate).toHaveBeenCalledWith([ 'HeroDetail', Object({ id: 12 }) ]);
-//                     done();
-//                 };
+            let test = () => {
+                expect(component.heroes).toBeDefined();
+                expect(component.heroes.length).toBe(4);
+                fixture.detectChanges();
+                let heroes = nativeElement.querySelectorAll('div.module h4');
+                heroes[0].click();
+                expect(router.navigate).toHaveBeenCalledWith([ '/detail', 12 ]);
+            };
 
-//                 component.ngOnInit();
-//                 fixture.detectChanges();
+            component.ngOnInit();
+            fixture.detectChanges();
 
-//                 setTimeout(test);
-//         })
-//             .catch(e => done.fail(e));
-//     });
-// });
+            setTimeout(test);
+        });
+    }));
+});
