@@ -3,17 +3,17 @@ import { inject, TestBed } from '@angular/core/testing';
 import { Http, BaseRequestOptions, Response, HttpModule, ResponseOptions } from '@angular/http';
 import { MockBackend, MockConnection } from '@angular/http/testing';
 
-import {HeroSearchService} from './hero-search.service';
+import {HeroService} from './hero.service';
 import {Hero} from './hero';
 
 import 'rxjs/Rx';
 import 'rxjs/Observable';
 
-describe('HeroSearchService Service', () => {
+describe('HeroService Service', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [
-                HeroSearchService,
+                HeroService,
                 BaseRequestOptions,
                 // { provide: Config, useClass: MockConfig },
                 MockBackend,
@@ -33,32 +33,92 @@ describe('HeroSearchService Service', () => {
         TestBed.compileComponents();
     });
 
-    it('Should get list of Heroes from search', inject([MockBackend, HeroSearchService], (mockBackend, service) => {
+    it('Should get list of Heroes', inject([MockBackend, HeroService], (mockBackend, service) => {
         mockBackend.connections.subscribe(
             (connection: MockConnection) => {
                 connection.mockRespond(new Response(
                     new ResponseOptions({
-                        body: [{ id: 123, name: 'Bob' }, { id: 234, name: 'Bob2' }]
+                        body: [{ id: 123 }, { id: 234 }]
                     }
                     )));
             });
 
-        service.search('Bob').subscribe((items: Hero[]) => {
+        service.getHeroes().subscribe((items: Hero[]) => {
             expect(items.length).toBe(2);
             expect(items[0].id).toBe(123);
             expect(items[1].id).toBe(234);
         });
     }));
 
+    it('Should get Hero by ID', inject([MockBackend, HeroService], (mockBackend, service) => {
+        mockBackend.connections.subscribe(
+            (connection: MockConnection) => {
+                connection.mockRespond(new Response(
+                    new ResponseOptions({
+                        body: { id: 123 }
+                    }
+                    )));
+            });
 
-    it('Should cause error handled in Hero Search service', inject([MockBackend, HeroSearchService], (mockBackend, service) => {
+        service.getHero(123).subscribe((item: Hero) => {
+            expect(item).toBeDefined();
+            expect(item.id).toBe(123);
+        });
+    }));
+
+    it('Should create a new Hero', inject([MockBackend, HeroService], (mockBackend, service) => {
+        mockBackend.connections.subscribe(
+            (connection: MockConnection) => {
+                connection.mockRespond(new Response(
+                    new ResponseOptions({
+                        body: { id: 123, name: 'Bob' }
+                    }
+                    )));
+            });
+
+        service.create('Bob').then((item) => {
+            expect(item).toBeDefined();
+            expect(item.name).toBe('Bob');
+        });
+    }));
+
+    it('Should update a Hero', inject([MockBackend, HeroService], (mockBackend, service) => {
+        mockBackend.connections.subscribe(
+            (connection: MockConnection) => {
+                connection.mockRespond(new Response(
+                    new ResponseOptions({
+                        body: { id: 123, name: 'Bob' }
+                    }
+                    )));
+            });
+        let updatedHero = new Hero(123, 'Bob');
+        service.update(updatedHero).then((item) => {
+            expect(item).toBeDefined();
+            expect(item.name).toBe('Bob');
+        });
+    }));
+
+    it('Should delete a Hero', inject([MockBackend, HeroService], (mockBackend, service) => {
+        mockBackend.connections.subscribe(
+            (connection: MockConnection) => {
+                connection.mockRespond(new Response(
+                    new ResponseOptions({status: 200})
+                ));
+            });
+
+        service.delete(123).then(() => {
+            expect(true).toBe(true);
+        });
+    }));
+
+    it('Should cause error handled in Hero service', inject([MockBackend, HeroService], (mockBackend, service) => {
         let mockError = new Error('TEST_ERROR');
         mockBackend.connections.subscribe(
             (connection: MockConnection) => {
                 connection.mockError(mockError);
             });
 
-        service.search('Bob').subscribe(items => { }, error => {
+        service.getHeroes().subscribe(items => { }, error => {
             expect(error).toBeDefined();
             expect(error).toBe('TEST_ERROR');
         });
