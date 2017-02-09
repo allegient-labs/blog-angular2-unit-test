@@ -19,7 +19,6 @@ export class HeroService extends BaseService {
     getHeroes() {
         let headers = this.getHeaders();
         let options = new RequestOptions({ headers: headers });
-        // return this.http.get('./app/mock-heroes.json', options)
         return this.http.get(this.heroesUrl, options)
             .map(this.extractData)
             .catch(this.handleError);
@@ -28,7 +27,6 @@ export class HeroService extends BaseService {
         const url = `${this.heroesUrl}/${id}`;
         let headers = this.getHeaders();
         let options = new RequestOptions({ headers: headers });
-        // return this.http.get('./app/mock-heroes.json', options)
         return this.http.get(url)
             .map(this.extractData)
             .catch(this.handleError);
@@ -46,7 +44,7 @@ export class HeroService extends BaseService {
         return this.http
             .post(this.heroesUrl, JSON.stringify({ name: name }), { headers: headers })
             .toPromise()
-            .then(res => res.json().data)
+            .then(this.extractData)
             .catch(this.handleError);
     }
 

@@ -66,6 +66,51 @@ describe('HeroService Service', () => {
         });
     }));
 
+    it('Should create a new Hero', inject([MockBackend, HeroService], (mockBackend, service) => {
+        mockBackend.connections.subscribe(
+            (connection: MockConnection) => {
+                connection.mockRespond(new Response(
+                    new ResponseOptions({
+                        body: { id: 123, name: 'Bob' }
+                    }
+                    )));
+            });
+
+        service.create('Bob').then((item) => {
+            expect(item).toBeDefined();
+            expect(item.name).toBe('Bob');
+        });
+    }));
+
+    it('Should update a Hero', inject([MockBackend, HeroService], (mockBackend, service) => {
+        mockBackend.connections.subscribe(
+            (connection: MockConnection) => {
+                connection.mockRespond(new Response(
+                    new ResponseOptions({
+                        body: { id: 123, name: 'Bob' }
+                    }
+                    )));
+            });
+        let updatedHero = new Hero(123, 'Bob');
+        service.update(updatedHero).then((item) => {
+            expect(item).toBeDefined();
+            expect(item.name).toBe('Bob');
+        });
+    }));
+
+    it('Should delete a Hero', inject([MockBackend, HeroService], (mockBackend, service) => {
+        mockBackend.connections.subscribe(
+            (connection: MockConnection) => {
+                connection.mockRespond(new Response(
+                    new ResponseOptions({status: 200})
+                ));
+            });
+
+        service.delete(123).then(() => {
+            expect(true).toBe(true);
+        });
+    }));
+
     it('Should cause error handled in Hero service', inject([MockBackend, HeroService], (mockBackend, service) => {
         let mockError = new Error('TEST_ERROR');
         mockBackend.connections.subscribe(
