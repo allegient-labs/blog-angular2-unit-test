@@ -1,113 +1,84 @@
-// import {
-//     it,
-//     describe,
-//     expect,
-//     inject,
-//     beforeEach,
-//     beforeEachProviders
-// } from '@angular/core/testing';
-// import { TestComponentBuilder } from '@angular/compiler/testing';
-// import { provide, ApplicationRef } from '@angular/core';
-// import { Router, ROUTER_PRIMARY_COMPONENT, ROUTER_PROVIDERS, RouteParams } from '@angular/router-deprecated';
-// import { APP_BASE_HREF, Location } from '@angular/common';
-// import { MockApplicationRef } from '@angular/core/testing';
-// import { SpyLocation } from '@angular/common/testing/location_mock';
-// import { HTTP_PROVIDERS } from '@angular/http';
+import { TestBed, async } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { HttpModule } from '@angular/http';
+import { Location } from '@angular/common';
 
-// import { HeroDetailComponent } from './hero-detail.component';
-// import { HeroService } from './hero.service';
-// import { MockHeroService } from './Testing/mocks';
+import { HeroDetailComponent } from './hero-detail.component';
+import { HeroService } from './hero.service';
+import { MockHeroService } from './Testing/mocks';
+import { MockActivatedRoute } from './Testing/mockActivatedRoute';
 
-// describe('HeroDetail Component', () => {
-//     let service;
-//     let testingComponent: HeroDetailComponent;
-//     let router: Router;
-//     let tcb;
+describe('HeroDetail Component', () => {
+    let router;
+    let mockActivatedRoute;
+    let mockLocation;
 
-//     beforeEachProviders(() => [
-//         HTTP_PROVIDERS,
-//         ROUTER_PROVIDERS,
-//         provide(Location, { useClass: SpyLocation }),
-//         provide(APP_BASE_HREF, { useValue: '/' }),
-//         provide(ROUTER_PRIMARY_COMPONENT, { useValue: HeroDetailComponent }),
-//         provide(ApplicationRef, { useClass: MockApplicationRef }),
-//         provide(Router, { useValue: jasmine.createSpyObj('Router', ['navigate']) }),
-//         provide(HeroService, { useClass: MockHeroService }),
-//         provide(RouteParams, { useValue: new RouteParams({ id: '12' }) }),
-//         MockHeroService,
-//         HeroDetailComponent,
-//         TestComponentBuilder,
-//         HeroService
-//     ]);
+    beforeEach(() => {
+        router = {
+            navigate: jasmine.createSpy('navigate')
+        };
+        mockActivatedRoute = new MockActivatedRoute({ 'id': 12 });
+        mockLocation = jasmine.createSpyObj('Location', ['back']);
 
-//     beforeEach(inject([HeroDetailComponent, Router, MockHeroService, TestComponentBuilder],
-//         (c, r, s, _tcb) => {
-//             testingComponent = c;
-//             service = s;
-//             router = r;
-//             tcb = _tcb;
-//         })
-//     );
+        TestBed.configureTestingModule({
+            declarations: [HeroDetailComponent], // declare the test component
+            imports: [FormsModule, HttpModule],
+            providers: [
+                { provide: HeroService, useClass: MockHeroService },
+                { provide: ActivatedRoute, useValue: mockActivatedRoute },
+                { provide: Location, useValue: mockLocation }
+            ]
+        });
+    });
 
-//     it('Should display Hero Details upon init', done => {
-//         tcb.overrideProviders(HeroDetailComponent,
-//             [
-//                 provide(RouteParams, { useValue: new RouteParams({ id: '12' }) }),
-//                 provide(HeroService, { useClass: MockHeroService })
-//             ])
-//             .createAsync(HeroDetailComponent).then(fixture => {
-//                 fixture.detectChanges();
-//                 let nativeElement = fixture.nativeElement;
-//                 let component = fixture.componentInstance;
+    it('Should display Hero Details upon init', async(() => {
+        TestBed.compileComponents().then(() => {
+            const fixture = TestBed.createComponent(HeroDetailComponent);
+            fixture.detectChanges();
+            let nativeElement = fixture.nativeElement;
+            let component = fixture.componentInstance;
 
-//                 let initTest = () => {
-//                     expect(component.hero).toBeDefined();
-//                     expect(component.hero.id).toBe(12);
-//                     expect(component.hero.name).toBe('Test Hero12');
-//                     let heroID = nativeElement.querySelector('#heroID');
-//                     expect(heroID).toBeDefined();
-//                     expect(heroID.innerText).toContain('12');
-//                     let heroName = nativeElement.querySelector('input[name=heroName]');
-//                     expect(heroName).toBeDefined();
-//                     expect(heroName.value).toContain('Test Hero12');
-//                     done();
-//                 };
+            let initTest = () => {
+                expect(component.hero).toBeDefined();
+                expect(component.hero.id).toBe(12);
+                expect(component.hero.name).toBe('Test Hero12');
+                let heroID = nativeElement.querySelector('#heroID');
+                expect(heroID).toBeDefined();
+                expect(heroID.innerText).toContain('12');
+                let heroName = nativeElement.querySelector('input[name=heroName]');
+                expect(heroName).toBeDefined();
+                expect(heroName.value).toContain('Test Hero12');
+            };
 
-//                 component.ngOnInit();
-//                 fixture.detectChanges();
+            component.ngOnInit();
+            fixture.detectChanges();
 
-//                 setTimeout(initTest);
-//             })
-//             .catch(e => done.fail(e));
-//     });
+            setTimeout(initTest);
+        });
+    }));
 
-//     it('Clicking back button should go back', done => {
-//         tcb.overrideProviders(HeroDetailComponent,
-//             [
-//                 provide(RouteParams, { useValue: new RouteParams({ id: '12' }) }),
-//                 provide(HeroService, { useClass: MockHeroService })
-//             ])
-//             .createAsync(HeroDetailComponent).then(fixture => {
-//                 spyOn(window.history, 'back').and.callFake(function () {
-//                     return true;
-//                 });
-//                 fixture.detectChanges();
-//                 let nativeElement = fixture.nativeElement;
-//                 let component = fixture.componentInstance;
+    it('Clicking back button should go back', async(() => {
+        TestBed.compileComponents().then(() => {
+            spyOn(window.history, 'back').and.callFake(function () {
+                return true;
+            });
+            const fixture = TestBed.createComponent(HeroDetailComponent);
+            fixture.detectChanges();
+            let nativeElement = fixture.nativeElement;
+            let component = fixture.componentInstance;
 
-//                 let test = () => {
-//                     fixture.detectChanges();
-//                     expect(window.history.back).toHaveBeenCalled();
-//                     done();
-//                 };
+            let test = () => {
+                fixture.detectChanges();
+                expect(mockLocation.back).toHaveBeenCalled();
+            };
 
-//                 component.ngOnInit();
-//                 fixture.detectChanges();
-//                 let backButton = nativeElement.querySelector('#goBack');
-//                 backButton.click();
+            component.ngOnInit();
+            fixture.detectChanges();
+            let backButton = nativeElement.querySelector('#goBack');
+            backButton.click();
 
-//                 setTimeout(test);
-//             })
-//             .catch(e => done.fail(e));
-//     });
-// });
+            setTimeout(test);
+        });
+    }));
+});
