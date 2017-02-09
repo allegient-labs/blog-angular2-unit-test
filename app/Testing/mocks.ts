@@ -54,7 +54,6 @@ export class MockHeroSearchService extends HeroSearchService {
     }
 
     search(term: string): Observable<Hero[]> {
-        console.log('Using MockHeroSearchService');
         let heroes = new Array<Hero>();
         heroes.push(new Hero(1, 'Test' + term));
         return Observable.of(heroes);
