@@ -2,6 +2,7 @@ import { TestBed, async } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpModule } from '@angular/http';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import {DashboardComponent} from './dashboard.component';
 import {HeroSearchComponent} from './hero-search.component';
@@ -17,12 +18,15 @@ describe('Dashboard Component', () => {
         };
 
         TestBed.configureTestingModule({
-            declarations: [DashboardComponent, HeroSearchComponent], // declare the test component
+            declarations: [DashboardComponent], // declare the test component
             imports: [FormsModule, HttpModule],
             providers: [
                 { provide: HeroService, useClass: MockHeroService },
                 { provide: Router, useValue: router }
-        ]});
+            ],
+            // Tells the compiler not to error on unknown elements and attributes
+            schemas: [NO_ERRORS_SCHEMA]
+        });
     });
 
     it('Should get first 4 Heroes on init', async(() => {
