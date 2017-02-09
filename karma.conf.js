@@ -74,7 +74,7 @@ module.exports = function (config) {
         // Do not include tests or libraries (these files will be instrumented by Istanbul)
         // remove test files from coverage and add javascript files to source map module
         preprocessors: {
-          'app/**/!(*app.component|main|*.spec|mocks).js': ['coverage'], 
+          'app/**/!(*app.component|main|*.spec|mock*|*.module).js': ['coverage'], 
           'app/**/*.js': ['sourcemap']
         },
         reporters: ['progress', 'coverage'],
