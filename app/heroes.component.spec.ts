@@ -94,4 +94,80 @@ describe('HeroesComponent', () => {
             setTimeout(test);
         });
     }));
+
+    it('Should Add a Hero', async(() => {
+        TestBed.compileComponents().then(() => {
+            const fixture = TestBed.createComponent(HeroesComponent);
+            fixture.detectChanges();
+            let nativeElement = fixture.nativeElement;
+            let component = fixture.componentInstance;
+
+            let test = () => {
+                fixture.detectChanges();
+                expect(component.selectedHero).toBe(null);
+                expect(component.heroes[component.heroes.length - 1].name).toBe('BobTest');
+            };
+
+            component.ngOnInit();
+            fixture.detectChanges();
+            let newHeroName = nativeElement.querySelector('input[id=heroName]');
+            expect(newHeroName).toBeDefined();
+            newHeroName.value = 'BobTest';
+            let addButton = nativeElement.querySelector('button[name=addHero]');
+            addButton.click();
+
+            setTimeout(test);
+        });
+    }));
+
+    it('Should Not Add a Hero when name is blank', async(() => {
+        TestBed.compileComponents().then(() => {
+            const fixture = TestBed.createComponent(HeroesComponent);
+            fixture.detectChanges();
+            let nativeElement = fixture.nativeElement;
+            let component = fixture.componentInstance;
+
+            let test = () => {
+                fixture.detectChanges();
+                expect(component.heroes.length).toBe(heroCount);
+            };
+
+            component.ngOnInit();
+            fixture.detectChanges();
+            let heroCount = component.heroes.length;
+            let newHeroName = nativeElement.querySelector('input[id=heroName]');
+            expect(newHeroName).toBeDefined();
+            newHeroName.value = '';
+            let addButton = nativeElement.querySelector('button[name=addHero]');
+            addButton.click();
+
+            setTimeout(test);
+        });
+    }));
+
+    it('Should Delete a Hero', async(() => {
+        TestBed.compileComponents().then(() => {
+            const fixture = TestBed.createComponent(HeroesComponent);
+            fixture.detectChanges();
+            let nativeElement = fixture.nativeElement;
+            let component = fixture.componentInstance;
+
+            let test = () => {
+                fixture.detectChanges();
+                expect(component.selectedHero).toBe(null);
+                expect(component.heroes.length).toBe(heroCount - 1);
+            };
+
+            component.ngOnInit();
+            fixture.detectChanges();
+            let heroCount = component.heroes.length;
+            let heroItems = nativeElement.querySelectorAll('ul.heroes li');
+            heroItems[0].click();
+            fixture.detectChanges();
+            let deleteButton = nativeElement.querySelectorAll('button.delete')[0];
+            deleteButton.click();
+
+            setTimeout(test);
+        });
+    }));
 });
